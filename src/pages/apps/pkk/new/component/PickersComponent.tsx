@@ -10,7 +10,16 @@ interface CustomInputProps {
 }
 
 const CustomInput = forwardRef(({ ...props }: CustomInputProps, ref) => {
-  return <TextField inputRef={ref} {...props} sx={{ width: "100%" }} />;
+  console.log(props);
+
+  return (
+    <TextField
+      inputRef={ref}
+      {...props}
+      sx={{ width: "100%" }}
+      InputLabelProps={{ shrink: true }}
+    />
+  );
 });
 
 export default CustomInput;

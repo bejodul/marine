@@ -10,43 +10,43 @@ export async function middleware(request: NextRequest) {
 
   const pathname = nextUrl.pathname
 
-  return NextResponse.next()
+  //return NextResponse.next()
 
-  // if (notRequirePath.some((path) => pathname.startsWith(path))) {
-  //   return NextResponse.next();
-  // } else {
+  if (notRequirePath.some((path) => pathname.startsWith(path))) {
+    return NextResponse.next();
+  } else {
 
-  //   const checkTokenFrontend = process.env.CHECK_TOKEN_FRONTEND
-  //   let token
+    const checkTokenFrontend = process.env.CHECK_TOKEN_FRONTEND
+    let token
 
-  //   if (checkTokenFrontend === "false") {
-  //     token = await getToken({ req: request });
-  //   } else {
-  //     const authorizationHeader = request.headers.get("Authorization");
-  //     if (authorizationHeader && authorizationHeader.startsWith("Bearer ")) {
-  //       const jwtToken = authorizationHeader.slice(7);
-  //       const secretKey = new TextEncoder().encode(process.env.NEXTAUTH_SECRET)
+    if (checkTokenFrontend === "false") {
+      token = await getToken({ req: request });
+    } else {
+      const authorizationHeader = request.headers.get("Authorization");
+      if (authorizationHeader && authorizationHeader.startsWith("Bearer ")) {
+        const jwtToken = authorizationHeader.slice(7);
+        const secretKey = new TextEncoder().encode(process.env.NEXTAUTH_SECRET)
 
-  //       try {
-  //         token = await jwtVerify(jwtToken, secretKey)
+        try {
+          token = await jwtVerify(jwtToken, secretKey)
 
-  //         return NextResponse.next()
-  //       } catch (error) {
-  //         console.log(error)
+          return NextResponse.next()
+        } catch (error) {
+          console.log(error)
 
-  //         return new NextResponse("Unauthorized", { status: 401 });
-  //       }
-  //     } else {
-  //       return new NextResponse("Bad Request", { status: 400 });
-  //     }
-  //   }
+          return new NextResponse("Unauthorized", { status: 401 });
+        }
+      } else {
+        return new NextResponse("Bad Request", { status: 400 });
+      }
+    }
 
-  //   if (!token) {
-  //     const url = new URL(`/api/auth/signin`, request.url);
-  //     url.searchParams.set("callbackUrl", encodeURI(request.url));
+    if (!token) {
+      const url = new URL(`/api/auth/signin`, request.url);
+      url.searchParams.set("callbackUrl", encodeURI(request.url));
 
-  //     return NextResponse.redirect(url);
-  //   }
+      return NextResponse.redirect(url);
+    }
 
-  // }
+  }
 }

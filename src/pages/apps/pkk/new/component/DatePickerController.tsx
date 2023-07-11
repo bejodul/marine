@@ -17,6 +17,7 @@ export default function DatePickerController(props: {
   setValue: any;
   popperPlacement: any;
   label: string;
+  showTimeSelect?: boolean;
 }) {
   const {
     control,
@@ -31,6 +32,7 @@ export default function DatePickerController(props: {
     setValue,
     popperPlacement,
     label,
+    showTimeSelect = false,
   } = props;
 
   return (
@@ -42,13 +44,16 @@ export default function DatePickerController(props: {
         render={({ field: { value, onChange } }) => (
           <DatePickerWrapper>
             <DatePicker
-              showTimeSelect
+              showTimeSelect={showTimeSelect}
               timeFormat="HH:mm"
               timeIntervals={10}
+              selected={value}
               dateFormat={format}
               id={id}
-              selected={value}
-              onChange={(dateFormat: Date) => setValue(dateFormat)}
+              onChange={(dateFormat: Date) => {
+                setValue(dateFormat);
+                onChange(dateFormat);
+              }}
               popperPlacement={popperPlacement}
               placeholderText={placeHolder}
               minDate={minDate}

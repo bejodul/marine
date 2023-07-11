@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next/types'
 import { MasterFasilitas } from '../../../../entity/MasterFasilitas'
 import { ApiResponseType } from 'src/types/api/responseType'
-import { AppDataSource } from 'src/data-source'
+import DataBase from 'src/data-source'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ApiResponseType>) {
   let stsCode
@@ -9,11 +9,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   let stsMessage
   let resmsg
 
+  const db = new DataBase({ entities: [MasterFasilitas] })
+
   if (req.method === 'GET') {
     const { id } = req.query
 
+
     try {
-      const ds = await AppDataSource.initialize();
+
+      const ds = await db.connect()
 
       const rep = ds.getRepository(MasterFasilitas)
 
@@ -29,7 +33,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       stsMessage = 'failed'
       resmsg = error.message
     } finally {
-      await AppDataSource.destroy().catch(() => console.log('Database Close failed'))
+      db.disconnect()
+
       const resJson: ApiResponseType = {
         errorCode: stsCode,
         message: stsMessage,
@@ -43,7 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     try {
       const body: MasterFasilitas = req.body
 
-      const ds = await AppDataSource.initialize();
+      const ds = await db.connect()
 
       await ds.transaction(async manager => {
         const data = body
@@ -64,7 +69,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
       console.log(resmsg)
     } finally {
-      await AppDataSource.destroy().catch(() => console.log('Database Close failed'))
+      db.disconnect()
 
       const resJson: ApiResponseType = {
         errorCode: stsCode,
@@ -79,7 +84,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     try {
       const body: MasterFasilitas = req.body
 
-      const ds = await AppDataSource.initialize();
+      const ds = await db.connect()
 
       const rep = ds.getRepository(MasterFasilitas)
 
@@ -95,7 +100,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
       console.log(resmsg)
     } finally {
-      await AppDataSource.destroy().catch(() => console.log('Database Close failed'))
+      db.disconnect()
 
       const resJson: ApiResponseType = {
         errorCode: stsCode,
@@ -110,7 +115,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     try {
       const body: MasterFasilitas = req.body
 
-      const ds = await AppDataSource.initialize();
+      const ds = await db.connect()
 
       const rep = ds.getRepository(MasterFasilitas)
 
@@ -126,7 +131,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
       console.log(resmsg)
     } finally {
-      await AppDataSource.destroy().catch(() => console.log('Database Close failed'))
+      db.disconnect()
 
       const resJson: ApiResponseType = {
         errorCode: stsCode,

@@ -1,15 +1,13 @@
 import { Button, Card, CardContent, CardHeader, Grid } from "@mui/material";
 import { useEffect, useState, useRef } from "react";
-import DatePicker, { ReactDatePickerProps } from "react-datepicker";
-import CustomInput from "./component/PickersComponent";
 import { DateType } from "src/types/forms/reactDatepickerTypes";
-import DatePickerWrapper from "src/@core/styles/libs/react-datepicker";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import AutocompleteComp from "./component/AutocompleteController";
 import { addDays } from "date-fns";
 import TextController from "./component/TextController";
 import DatePickerController from "./component/DatePickerController";
+import { ReactDatePickerProps } from "react-datepicker";
 
 const defaultValues = {
   vesCode: "",
@@ -33,12 +31,13 @@ export default function Entry({
 }: {
   popperPlacement: ReactDatePickerProps["popperPlacement"];
 }) {
-  const [bc11Date, setBc11Date] = useState<DateType>();
-  const [jobStartDate, setJobStartDate] = useState<DateType>();
-  const [jobEndDate, setJobEndDate] = useState<DateType>();
-  const [gateEndDate, setGateEndDate] = useState<DateType>();
-  const [eta, setEta] = useState<DateType>();
-  const [etd, setEtd] = useState<DateType>();
+  const [bc11Date, setBc11Date] = useState<DateType>(); // eslint-disable-line
+  const [jobStartDate, setJobStartDate] = useState<DateType>(); //eslint-disable-line
+  const [jobEndDate, setJobEndDate] = useState<DateType>(); // eslint-disable-line
+  const [gateStartDate, setGateStartDate] = useState<DateType>(); //eslint-disable-line
+  const [gateEndDate, setGateEndDate] = useState<DateType>(); // eslint-disable-line
+  const [eta, setEta] = useState<DateType>(); //eslint-disable-line
+  const [etd, setEtd] = useState<DateType>(); // eslint-disable-line
   const [vesData, setVesData] = useState<AutocompleteOptions[]>([]);
   const [cnOriginOption, setCnOriginOption] = useState<AutocompleteOptions[]>(
     []
@@ -250,99 +249,84 @@ export default function Entry({
               />
             </Grid>
             <Grid item xs={6} lg={4} md={4} sm={4}>
-              <DatePickerWrapper>
-                <DatePicker
-                  selected={bc11Date}
-                  dateFormat={"dd/MM/yyyy"}
-                  id="bc11Date"
-                  onChange={(dateFormat: Date) => setBc11Date(dateFormat)}
-                  popperPlacement={popperPlacement}
-                  placeholderText="dd/mm/yyyy"
-
-                  // customInput={
-                  //   <CustomInput
-                  //     label="Tanggal BC 1.1*"
-
-                  //     //errors={errors}
-                  //     //name="bc11Date"
-                  //   ></CustomInput>
-                  // }
-                />
-              </DatePickerWrapper>
+              <DatePickerController
+                control={control}
+                errors={errors}
+                format="dd/MM/yyyy"
+                id="bc11Date"
+                label="Tanggal BC 1.1"
+                name="bc11DateController"
+                placeHolder="dd/mm/yyyy"
+                popperPlacement={popperPlacement}
+                setValue={setBc11Date}
+                maxDate={maxDate}
+                minDate={minDate}
+              />
             </Grid>
             <Grid item xs={6} lg={3} md={3} sm={3}>
-              <DatePickerWrapper>
-                <DatePicker
-                  showTimeSelect
-                  timeFormat="HH:mm"
-                  timeIntervals={10}
-                  selected={jobStartDate}
-                  dateFormat={"dd/MM/yyyy HH:mm"}
-                  id="jobStartDate"
-                  onChange={(dateFormat: Date) => setJobStartDate(dateFormat)}
-                  popperPlacement={popperPlacement}
-                  placeholderText="dd/mm/yyyy hh:mm"
-                  minDate={minDate}
-                  maxDate={maxDate}
-                  customInput={
-                    <CustomInput
-                      label="Batas Awal Job Order*"
-                      errors={errors}
-                      name="jobStartDate"
-                    ></CustomInput>
-                  }
-                />
-              </DatePickerWrapper>
+              <DatePickerController
+                control={control}
+                errors={errors}
+                format="dd/MM/yyyy HH:mm"
+                id="jobStartDate"
+                label="Batas Awal Job Order"
+                name="jobStartDateController"
+                placeHolder="dd/mm/yyyy hh:mm"
+                popperPlacement={popperPlacement}
+                setValue={setJobStartDate}
+                maxDate={maxDate}
+                minDate={minDate}
+                showTimeSelect={true}
+              />
             </Grid>
             <Grid item xs={6} lg={3} md={3} sm={3}>
-              <DatePickerWrapper>
-                <DatePicker
-                  showTimeSelect
-                  timeFormat="HH:mm"
-                  timeIntervals={10}
-                  dateFormat={"dd/MM/yyyy HH:mm"}
-                  id="jobEndDate"
-                  selected={jobEndDate}
-                  onChange={(dateFormat: Date) => setJobEndDate(dateFormat)}
-                  popperPlacement={popperPlacement}
-                  placeholderText="dd/mm/yyyy hh:mm"
-                  minDate={minDate}
-                  maxDate={maxDate}
-                  customInput={
-                    <CustomInput
-                      label="Batas Akhir Job Order*"
-                      errors={errors}
-                      name="jobEndDate"
-                    ></CustomInput>
-                  }
-                />
-              </DatePickerWrapper>
+              <DatePickerController
+                control={control}
+                errors={errors}
+                format="dd/MM/yyyy HH:mm"
+                id="jobEndDate"
+                label="Batas Akhir Job Order"
+                name="jobEndDateController"
+                placeHolder="dd/mm/yyyy hh:mm"
+                popperPlacement={popperPlacement}
+                setValue={setJobEndDate}
+                maxDate={maxDate}
+                minDate={minDate}
+                showTimeSelect={true}
+              />
             </Grid>
             <Grid item xs={6} lg={3} md={3} sm={3}>
-              <DatePickerWrapper>
-                <DatePicker
-                  showTimeSelect
-                  timeFormat="HH:mm"
-                  timeIntervals={10}
-                  dateFormat={"dd/MM/yyyy HH:mm"}
-                  id="gateEndDate"
-                  selected={gateEndDate}
-                  onChange={(dateFormat: Date) => setGateEndDate(dateFormat)}
-                  popperPlacement={popperPlacement}
-                  placeholderText="dd/mm/yyyy hh:mm"
-                  minDate={minDate}
-                  maxDate={maxDate}
-                  customInput={
-                    <CustomInput
-                      label="Batas Akhir Masuk Gate*"
-                      errors={errors}
-                      name="gateEndDate"
-                    />
-                  }
-                />
-              </DatePickerWrapper>
+              <DatePickerController
+                control={control}
+                errors={errors}
+                format="dd/MM/yyyy HH:mm"
+                id="gateStartDate"
+                label="Batas Awal Masuk Gate"
+                name="gateStartDateController"
+                placeHolder="dd/mm/yyyy hh:mm"
+                popperPlacement={popperPlacement}
+                setValue={setGateStartDate}
+                maxDate={maxDate}
+                minDate={minDate}
+                showTimeSelect={true}
+              />
             </Grid>
-            <Grid item xs={6} lg={3} md={3} sm={3}></Grid>
+            <Grid item xs={6} lg={3} md={3} sm={3}>
+              <DatePickerController
+                control={control}
+                errors={errors}
+                format="dd/MM/yyyy HH:mm"
+                id="gateEndDate"
+                label="Batas Akhir Masuk Gate"
+                name="gateEndDateController"
+                placeHolder="dd/mm/yyyy hh:mm"
+                popperPlacement={popperPlacement}
+                setValue={setGateEndDate}
+                maxDate={maxDate}
+                minDate={minDate}
+                showTimeSelect={true}
+              />
+            </Grid>
             <Grid item xs={6} lg={3} md={3} sm={3}>
               <TextController
                 control={control}
@@ -372,9 +356,9 @@ export default function Entry({
                 placeHolder="dd/mm/yyyy hh:mm"
                 popperPlacement={popperPlacement}
                 setValue={setEta}
-                value={eta}
                 maxDate={maxDate}
                 minDate={minDate}
+                showTimeSelect={true}
               />
             </Grid>
             <Grid item xs={6} lg={3} md={3} sm={3}>
@@ -382,7 +366,6 @@ export default function Entry({
                 format="dd/MM/yyyy HH:mm"
                 placeHolder="dd/mm/yyyy hh:mm"
                 id="etd"
-                value={etd}
                 setValue={setEtd}
                 control={control}
                 errors={errors}
@@ -391,6 +374,7 @@ export default function Entry({
                 maxDate={maxDate}
                 label="Tanggal Berangkat*"
                 name="etd"
+                showTimeSelect={true}
               />
             </Grid>
             <Grid item xs={12} lg={3} md={3} sm={3}>

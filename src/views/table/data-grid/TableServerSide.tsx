@@ -1,18 +1,12 @@
 import { Card, CardHeader } from '@mui/material'
 import { DataGrid, GridColDef, GridSortModel } from '@mui/x-data-grid'
-import { ChangeEvent, useCallback, useEffect, useState } from 'react'
+import { KeyboardEvent, useCallback, useEffect, useState } from 'react'
 import CustomNoRowsOverlay from 'src/layouts/components/rpkop/CustomNoRowsOverlay'
 
 import CustomPaginationBtn from 'src/layouts/components/rpkop/CustomPaginationBtn'
 
-import QuickSearchToolbar from './QuickSearchToolbar'
+import QuickSearchToolbarSS from './QuickSearchToolbarSS'
 import axios from 'axios'
-
-// import axios from 'axios'
-
-// const escapeRegExp = (value: string) => {
-//   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
-// }
 
 type SortType = 'asc' | 'desc' | undefined | null
 
@@ -33,7 +27,7 @@ const TableServerSide = (props: {
   const [isLoading, setIsLoading] = useState(true)
 
   const fetchTableData = useCallback(
-    async (sort: SortType, searchValue: string, column: string) => {
+    async (sort: SortType, column: string, searchValue: string) => {
       const params = {
         sort: sort,
         sortColumn: column,
@@ -41,13 +35,12 @@ const TableServerSide = (props: {
         page: paginationModel.page,
         pageSize: paginationModel.pageSize
       }
-      setIsLoading(true);
+      setIsLoading(true)
       await axios
         .get(url, { params: params })
         .then(res => {
           setTotal(res.data.data.total)
           setRows(res.data.data.data)
-          console.log('row : ', res.data.data.data)
           setIsLoading(false)
         })
         .catch(() => setIsLoading(false))
@@ -56,28 +49,29 @@ const TableServerSide = (props: {
     [paginationModel]
   )
   useEffect(() => {
-    fetchTableData(sort, searchValue, sortColumn)
-  }, [fetchTableData, searchValue, sort, sortColumn])
+    fetchTableData(sort, sortColumn, searchValue)
+  }, [fetchTableData, sort, sortColumn, searchValue])
 
   const handleSortModel = (newModel: GridSortModel) => {
     if (newModel.length) {
       setSort(newModel[0].sort)
       setSortColumn(newModel[0].field)
-      fetchTableData(newModel[0].sort, searchValue, newModel[0].field)
+      fetchTableData(newModel[0].sort, newModel[0].field, searchValue)
     } else {
       setSort('asc')
       setSortColumn('')
     }
   }
 
-  const handleColumnMenuChange = params => {
-    console.log('handle : ', params)
-  }
-
   const handleSearch = (value: string) => {
     setSearchValue(value)
-    fetchTableData(sort, value, sortColumn)
+    fetchTableData(sort, sortColumn, value)
   }
+
+  const handleClearSearch = (value: string) => {
+    setSearchValue(value)
+  }
+
 
   return (
     <Card>
@@ -91,14 +85,13 @@ const TableServerSide = (props: {
         rowCount={total}
         sortingMode='server'
         paginationMode='server'
-        onMenuOpen={handleColumnMenuChange}
+        disableColumnMenu
         pageSizeOptions={[5, 10, 25, 50]}
         onSortModelChange={handleSortModel}
         onPaginationModelChange={setPaginationModel}
         slots={{
-          toolbar: QuickSearchToolbar,
-
-          // pagination: CustomPaginationBtn,
+          toolbar: QuickSearchToolbarSS,
+          pagination: CustomPaginationBtn,
           noRowsOverlay: CustomNoRowsOverlay
         }}
         slotProps={{
@@ -106,9 +99,13 @@ const TableServerSide = (props: {
             variant: 'outlined'
           },
           toolbar: {
-            value: searchValue,
-            clearSearch: () => handleSearch(''),
-            onChange: (event: ChangeEvent<HTMLInputElement>) => handleSearch(event.target.value),
+            clearSearch: () => handleClearSearch(''),
+            onKeyPress: (event: KeyboardEvent<HTMLInputElement>) => {
+              if (event.key === 'Enter') {
+                const inputElement = event.target as HTMLInputElement
+                handleSearch(inputElement.value)
+              }
+            },
             isExport: isExport,
             alignContent: alignContent
           }
