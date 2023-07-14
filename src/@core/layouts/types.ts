@@ -32,7 +32,6 @@ export type BlankLayoutWithAppBarProps = {
 }
 
 export type NavSectionTitle = {
-  auth?: boolean
   action?: string
   subject?: string
   sectionTitle: string
@@ -41,7 +40,6 @@ export type NavSectionTitle = {
 export type NavGroup = {
   icon?: string
   title: string
-  auth?: boolean
   action?: string
   subject?: string
   badgeContent?: string
@@ -53,7 +51,6 @@ export type NavLink = {
   icon?: string
   path?: string
   title: string
-  auth?: boolean
   action?: string
   subject?: string
   disabled?: boolean

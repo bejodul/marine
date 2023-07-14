@@ -19,4 +19,10 @@ export default class SysCodeLocal {
 
   @Column({ name: "DESCR_1", length: 500, nullable: true })
   descr1: string;
+
+  @Column({ name: "SITE_ID", length: 20 })
+  siteId: string;
+
+  @Column({ name: "GROUP_ID", length: 20 })
+  groupId: string;
 }

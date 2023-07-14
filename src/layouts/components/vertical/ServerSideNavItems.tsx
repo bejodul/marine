@@ -1,25 +1,33 @@
 // ** React Imports
-import { useEffect, useState } from 'react'
-
-// ** Axios Import
-import axios from 'axios'
+import { useEffect, useState } from "react";
 
 // ** Type Import
-import { VerticalNavItemsType } from 'src/@core/layouts/types'
+import { VerticalNavItemsType } from "src/@core/layouts/types";
+
+import { useSession } from "next-auth/react";
+import { Session } from "next-auth";
+
+interface SessionNew extends Session {
+  menuList?: any;
+}
 
 const ServerSideNavItems = () => {
   // ** State
-  const [menuItems, setMenuItems] = useState<VerticalNavItemsType>([])
+  const [menuItems, setMenuItems] = useState<VerticalNavItemsType>([]);
+  const { data: session, status } = useSession();
+  const sessionNew: SessionNew = session;
 
   useEffect(() => {
-    axios.get('/api/vertical-nav/data').then(response => {
-      const menuArray = response.data
+    if (session && status === "authenticated") {
+      const jsonMenu = sessionNew.menuList;
+      setMenuItems(jsonMenu as VerticalNavItemsType);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-      setMenuItems(menuArray)
-    })
-  }, [])
+  //console.log(menuItems);
 
-  return { menuItems }
-}
+  return { menuItems };
+};
 
-export default ServerSideNavItems
+export default ServerSideNavItems;

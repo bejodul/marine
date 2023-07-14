@@ -3,50 +3,48 @@ import { getToken } from 'next-auth/jwt';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export async function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest, response: NextResponse) { //eslint-disable-line
   const { nextUrl } = request;
-
-  const notRequirePath = ['/api/auth']
-
+  const requirePath = ['/api']
+  const notRequirePath = ['/api/user/login/', '/api/auth/', '/api/menu/']
   const pathname = nextUrl.pathname
 
-  //return NextResponse.next()
+  if (requirePath.some((path) => pathname.startsWith(path))) {
 
-  if (notRequirePath.some((path) => pathname.startsWith(path))) {
-    return NextResponse.next();
-  } else {
+    const token = await getToken({ req: request })
 
-    const checkTokenFrontend = process.env.CHECK_TOKEN_FRONTEND
-    let token
 
-    if (checkTokenFrontend === "false") {
-      token = await getToken({ req: request });
-    } else {
-      const authorizationHeader = request.headers.get("Authorization");
-      if (authorizationHeader && authorizationHeader.startsWith("Bearer ")) {
-        const jwtToken = authorizationHeader.slice(7);
-        const secretKey = new TextEncoder().encode(process.env.NEXTAUTH_SECRET)
+    if (pathname.startsWith("/api/auth/signin") && token) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/'
 
-        try {
-          token = await jwtVerify(jwtToken, secretKey)
+      return NextResponse.rewrite(url)
+    }
+    else if (notRequirePath.some((path) => pathname.startsWith(path))) return NextResponse.next()
 
-          return NextResponse.next()
-        } catch (error) {
-          console.log(error)
+    const authorizationHeader = request.headers.get("Authorization");
+    if (authorizationHeader && authorizationHeader.startsWith("Bearer ")) {
+      console.log("masuk sini")
+      const jwtToken = authorizationHeader.slice(7);
+      const secretKey = new TextEncoder().encode(process.env.NEXTAUTH_SECRET)
+      try {
+        const token = await jwtVerify(jwtToken, secretKey)
 
-          return new NextResponse("Unauthorized", { status: 401 });
+        if (!token) {
+          const url = new URL(`/api/auth/signin12`, request.url);
+          url.searchParams.set("callbackUrl", encodeURI(request.url));
+
+          return NextResponse.redirect(url);
         }
-      } else {
-        return new NextResponse("Bad Request", { status: 400 });
+
+        return NextResponse.next()
+      } catch (error) {
+        console.log(error)
+
+        return new NextResponse("Unauthorized", { status: 401 });
       }
+    } else {
+      return new NextResponse("Bad Request", { status: 400 });
     }
-
-    if (!token) {
-      const url = new URL(`/api/auth/signin`, request.url);
-      url.searchParams.set("callbackUrl", encodeURI(request.url));
-
-      return NextResponse.redirect(url);
-    }
-
   }
 }

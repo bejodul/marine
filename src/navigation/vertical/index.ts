@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { VerticalNavItemsType } from '../../../src/@core/layouts/types';
+import { VerticalNavItemsType } from '../../@core/layouts/types';
 import { ApiResponseType } from 'src/types/api/responseType';
 
 const Navigation = (): VerticalNavItemsType => {
