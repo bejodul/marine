@@ -66,8 +66,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       sts = false
       stsMessage = 'failed'
       resmsg = error.message
-
-      console.log(resmsg)
     } finally {
       db.disconnect()
 
@@ -97,8 +95,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       sts = false
       stsMessage = 'failed'
       resmsg = error.message
-
-      console.log(resmsg)
     } finally {
       db.disconnect()
 
@@ -128,8 +124,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       sts = false
       stsMessage = 'failed'
       resmsg = error.message
-
-      console.log(resmsg)
     } finally {
       db.disconnect()
 

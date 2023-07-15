@@ -26,8 +26,6 @@ export const authOptions = {
           username: credentials.username
         };
 
-        console.log(`${credentials.username}`)
-
         let login
         try {
           login = await fetch(`${process.env.API_URL}/api/user/login/`, {//eslint-disable-line
@@ -41,10 +39,7 @@ export const authOptions = {
           console.log(error)
         }
 
-        console.log("2")
-
         if (login.ok) {
-          console.log("3")
           const jsonRes = await login.json()
 
           let menu
@@ -57,17 +52,11 @@ export const authOptions = {
               }
             })
 
-            console.log("masuk")
           } catch (error) {
             console.log(error)
           }
 
-
-          console.log("4")
-
           const menuJson = await menu.json()
-
-          console.log(menuJson.data)
 
           const user = { id: "1", name: `${jsonRes.data.name}`, email: `${jsonRes.data.userName}`, menuList: menuJson.data }
 

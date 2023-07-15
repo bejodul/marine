@@ -25,8 +25,6 @@ const ServerSideNavItems = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  //console.log(menuItems);
-
   return { menuItems };
 };
 

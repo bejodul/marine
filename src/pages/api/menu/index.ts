@@ -85,8 +85,6 @@ export default async function handler(
     sts = false;
     stsMessage = "failed"
     resmsg = error.message;
-
-    console.log(resmsg)
   } finally {
     const resJson: ApiResponseType = {
       errorCode: stsCode,

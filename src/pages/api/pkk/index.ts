@@ -95,8 +95,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       sts = false;
       stsMessage = failedStatus
       resmsg = error.message;
-
-      console.log(resmsg)
     } finally {
       await db.disconnect()
 

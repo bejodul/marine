@@ -10,8 +10,6 @@ interface CustomInputProps {
 }
 
 const CustomInput = forwardRef(({ ...props }: CustomInputProps, ref) => {
-  console.log(props);
-
   return (
     <TextField
       inputRef={ref}
