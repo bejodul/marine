@@ -26,23 +26,44 @@ export const authOptions = {
           username: credentials.username
         };
 
-        const login = await fetch(`${process.env.API_URL}/api/user/login/`, {//eslint-disable-line
-          method: "POST",
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(body)
-        })
+        console.log(`${credentials.username}`)
 
-        if (login.ok) {
-          const jsonRes = await login.json()
-
-          const menu = await fetch(`${process.env.API_URL}/api/menu/user/username/?p=${credentials.username}`, {//eslint-disable-line
-            method: "GET",
+        let login
+        try {
+          login = await fetch(`${process.env.API_URL}/api/user/login/`, {//eslint-disable-line
+            method: "POST",
             headers: {
               'Content-Type': 'application/json',
-            }
+            },
+            body: JSON.stringify(body)
           })
+        } catch (error) {
+          console.log(error)
+        }
+
+        console.log("2")
+
+        if (login.ok) {
+          console.log("3")
+          const jsonRes = await login.json()
+
+          let menu
+
+          try {
+            menu = await fetch(`${process.env.API_URL}/api/menu/user/username/?p=${credentials.username}`, {//eslint-disable-line
+              method: "GET",
+              headers: {
+                'Content-Type': 'application/json',
+              }
+            })
+
+            console.log("masuk")
+          } catch (error) {
+            console.log(error)
+          }
+
+
+          console.log("4")
 
           const menuJson = await menu.json()
 

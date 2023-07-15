@@ -24,7 +24,6 @@ export async function middleware(request: NextRequest, response: NextResponse) {
 
     const authorizationHeader = request.headers.get("Authorization");
     if (authorizationHeader && authorizationHeader.startsWith("Bearer ")) {
-      console.log("masuk sini")
       const jwtToken = authorizationHeader.slice(7);
       const secretKey = new TextEncoder().encode(process.env.NEXTAUTH_SECRET)
       try {
